@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Product Judge</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h2>Product Image</h2>
+            <img src="https://via.placeholder.com/300" alt="Product Image" id="product-image">
+        </div>
+        <div class="right-section">
+            <h2>Select Options</h2>
+            <div class="parent-options">
+                <button class="parent-btn" data-type="generic">1. Generic</button>
+                <button class="parent-btn" data-type="plastic">2. Plastic</button>
+                <button class="parent-btn" data-type="cover">3. Cover</button>
+            </div>
+            <div class="sub-options" id="sub-options">
+                <h3>Select Sub-option</h3>
+                <button class="sub-btn" data-subtype="penetration">1. Penetration</button>
+                <button class="sub-btn" data-subtype="spillage">2. Spillage</button>
+                <button class="sub-btn" data-subtype="deformation">3. Deformation</button>
+            </div>
+            <button class="submit-btn" id="submit-btn" disabled>Submit (Enter)</button>
+            <div class="selection-display" id="selection-display">
+                <p>Selected: <span id="selected-options">None</span></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
