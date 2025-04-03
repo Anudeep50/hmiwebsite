@@ -101,14 +101,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add click event for QR code image
+    // Add click event for QR code image to decode and open URL
     const qrImage = document.getElementById('qr-code-image');
     if (qrImage) {
-        const amazonUrl = qrImage.getAttribute('data-url');
-        if (amazonUrl) {
-            qrImage.addEventListener('click', () => {
-                window.open(amazonUrl, '_blank');
-            });
-        }
+        qrImage.addEventListener('click', () => {
+            // Ensure the image is fully loaded
+            if (!qrImage.complete || qrImage.naturalWidth === 0) {
+                alert('QR code image is not fully loaded. Please try again.');
+                return;
+            }
+
+            // Create a canvas to draw the image
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = qrImage.naturalWidth;
+            canvas.height = qrImage.naturalHeight;
+            context.drawImage(qrImage, 0, 0, canvas.width, canvas.height);
+
+            // Get image data
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code) {
+                const url = code.data;
+                if (url) {
+                    window.open(url, '_blank');
+                } else {
+                    alert('No URL found in the QR code.');
+                }
+            } else {
+                alert('Failed to decode the QR code. Please ensure the QR code is clear and try again.');
+            }
+        });
     }
 });
