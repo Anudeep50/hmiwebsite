@@ -6,8 +6,23 @@ body {
 }
 
 .container {
+    display: flex;
     max-width: 1200px;
     margin: 0 auto;
+    gap: 20px;
+}
+
+.left-section, .right-section {
+    flex: 1;
+}
+
+.left-section {
+    text-align: center;
+}
+
+.left-section img {
+    max-width: 100%;
+    height: auto;
 }
 
 .right-section {
@@ -22,7 +37,7 @@ body {
 }
 
 button {
-    padding:  W 10px 20px;
+    padding: 10px 20px;
     margin: 5px;
     border: none;
     border-radius: 5px;
