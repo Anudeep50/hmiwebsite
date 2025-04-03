@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const index = parseInt(key) - 1;
             if (parentButtons[index]) {
                 selectParent(parentButtons[index]);
-                event.preventDefault(); // Prevent immediate sub-option selection
+                event.preventDefault();
             }
         }
 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.add('active');
         selectedSub = button.getAttribute('data-subtype');
         submitBtn.classList.add('enabled');
-        submitBtn.disabled = false; // Submit becomes available here
+        submitBtn.disabled = false;
         updateSelection();
     }
 
@@ -98,6 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedParent = null;
             selectedSub = null;
             updateSelection();
+        }
+    }
+
+    // Add click event for QR code image
+    const qrImage = document.getElementById('qr-code-image');
+    if (qrImage) {
+        const amazonUrl = qrImage.getAttribute('data-url');
+        if (amazonUrl) {
+            qrImage.addEventListener('click', () => {
+                window.open(amazonUrl, '_blank');
+            });
         }
     }
 });
