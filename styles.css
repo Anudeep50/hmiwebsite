@@ -23,6 +23,12 @@ body {
 .left-section img {
     max-width: 100%;
     height: auto;
+    border: 2px solid #007BFF;
+    cursor: pointer;
+}
+
+.left-section img:hover {
+    border-color: #0056b3;
 }
 
 .right-section {
