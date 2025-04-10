@@ -3,36 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warehouse Product Judge</title>
+    <title>HMI Website</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add jsQR library via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="left-section">
-            <h2>Product QR Code</h2>
+            <h2>Product Image and QR Code</h2>
             <img src="qr-code.png" alt="QR Code for Product" id="qr-code-image">
         </div>
         <div class="right-section">
-            <h2>Select Options</h2>
-            <div class="parent-options">
-                <button class="parent-btn" data-type="generic">1. Generic</button>
-                <button class="parent-btn" data-type="plastic">2. Plastic</button>
-                <button class="parent-btn" data-type="cover">3. Cover</button>
+            <h2>Selection Options</h2>
+            <div id="parent-options">
+                <button class="parent-btn" data-type="1. Generic">1. Generic</button>
+                <button class="parent-btn" data-type="2. Plastic">2. Plastic</button>
+                <button class="parent-btn" data-type="3. Cover">3. Cover</button>
             </div>
-            <div class="sub-options" id="sub-options">
-                <h3>Select Sub-option</h3>
-                <button class="sub-btn" data-subtype="penetration">1. Penetration</button>
-                <button class="sub-btn" data-subtype="spillage">2. Spillage</button>
-                <button class="sub-btn" data-subtype="deformation">3. Deformation</button>
+            <div id="sub-options" style="display: none;">
+                <button class="sub-btn" data-subtype="1. Penetration">1. Penetration</button>
+                <button class="sub-btn" data-subtype="2. Spillage">2. Spillage</button>
+                <button class="sub-btn" data-subtype="3. Deformation">3. Deformation</button>
             </div>
-            <button class="submit-btn" id="submit-btn" disabled>Submit (Enter)</button>
-            <div class="selection-display" id="selection-display">
-                <p>Selected: <span id="selected-options">None</span></p>
+            <button id="submit-btn" disabled>Submit</button>
+            <div id="selection-display">
+                Selected Options: <span id="selected-options">None</span>
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
