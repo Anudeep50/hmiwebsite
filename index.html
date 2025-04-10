@@ -13,19 +13,20 @@
         <div class="left-section">
             <h2>Product QR Code</h2>
             <img src="qr-code.png" alt="QR Code for Product" id="qr-code-image">
+            <p>QR Data: <span id="qr-output">Not scanned yet</span></p>
         </div>
         <div class="right-section">
-            <h2>Select Options</h2>
-            <div class="parent-options">
-                <button class="parent-btn" data-type="generic">1. Generic</button>
-                <button class="parent-btn" data-type="plastic">2. Plastic</button>
-                <button class="parent-btn" data-type="cover">3. Cover</button>
-            </div>
-            <div class="sub-options" id="sub-options">
-                <h3>Select Sub-option</h3>
-                <button class="sub-btn" data-subtype="penetration">1. Penetration</button>
-                <button class="sub-btn" data-subtype="spillage">2. Spillage</button>
-                <button class="sub-btn" data-subtype="deformation">3. Deformation</button>
+            <h2>Select Issue Type</h2>
+            <div class="combined-options">
+                <button class="option-btn" data-parent="generic" data-sub="penetration">1. Generic - Penetration</button>
+                <button class="option-btn" data-parent="generic" data-sub="spillage">2. Generic - Spillage</button>
+                <button class="option-btn" data-parent="generic" data-sub="deformation">3. Generic - Deformation</button>
+                <button class="option-btn" data-parent="plastic" data-sub="penetration">4. Plastic - Penetration</button>
+                <button class="option-btn" data-parent="plastic" data-sub="spillage">5. Plastic - Spillage</button>
+                <button class="option-btn" data-parent="plastic" data-sub="deformation">6. Plastic - Deformation</button>
+                <button class="option-btn" data-parent="cover" data-sub="penetration">7. Cover - Penetration</button>
+                <button class="option-btn" data-parent="cover" data-sub="spillage">8. Cover - Spillage</button>
+                <button class="option-btn" data-parent="cover" data-sub="deformation">9. Cover - Deformation</button>
             </div>
             <button class="submit-btn" id="submit-btn" disabled>Submit (Enter)</button>
             <div class="selection-display" id="selection-display">
@@ -33,6 +34,35 @@
             </div>
         </div>
     </div>
+    <script>
+        // Load and scan the QR code when the page loads
+        window.onload = function() {
+            const qrImage = document.getElementById('qr-code-image');
+            const qrOutput = document.getElementById('qr-output');
+            
+            qrImage.onload = function() {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = qrImage.width;
+                canvas.height = qrImage.height;
+                context.drawImage(qrImage, 0, 0, qrImage.width, qrImage.height);
+                
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    qrOutput.textContent = code.data;
+                } else {
+                    qrOutput.textContent = "Could not decode QR code";
+                }
+            };
+            
+            // Trigger onload if image is already cached
+            if (qrImage.complete) {
+                qrImage.onload();
+            }
+        };
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
