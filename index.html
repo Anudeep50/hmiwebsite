@@ -13,6 +13,9 @@
         <div class="left-section">
             <h2>Product QR Code</h2>
             <img src="qr-code.png" alt="QR Code for Product" id="qr-code-image">
+            <button id="scan-qr-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                Scan QR Code
+            </button>
         </div>
         <div class="right-section">
             <h2>Select Options</h2>
@@ -34,5 +37,49 @@
         </div>
     </div>
     <script src="script.js"></script>
+    <script>
+    document.getElementById('scan-qr-btn').addEventListener('click', () => {
+        const qrImage = document.getElementById('qr-code-image');
+        if (!qrImage) {
+            alert('QR code image not found.');
+            return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        const image = new Image();
+        image.crossOrigin = 'Anonymous';
+        image.src = qrImage.src;
+
+        image.onload = () => {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0, image.width, image.height);
+
+            try {
+                const imageData = context.getImageData(0, 0, image.width, image.height);
+                const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (qrCode && qrCode.data) {
+                    try {
+                        new URL(qrCode.data);
+                        window.location.href = qrCode.data;
+                    } catch (e) {
+                        alert('QR code does not contain a valid URL.');
+                    }
+                } else {
+                    alert('No QR code found in the image.');
+                }
+            } catch (e) {
+                alert('Error scanning QR code: ' + e.message);
+            }
+        };
+
+        image.onerror = () => {
+            alert('Failed to load QR code image.');
+        };
+    });
+    </script>
 </body>
 </html>
