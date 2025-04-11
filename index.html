@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Warehouse Product Judge</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add jsQR library via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="left-section">
             <h2>Product QR Code</h2>
-            <img src="qr-code.png" alt="QR Code for Product" id="qr-code-image">
+            <img src="warehouse1.jpg" alt="Warehouse 1">
+            <img src="warehouse2.jpg" alt="Warehouse 2">
+            <img src="qr-code.png" alt="QR Code"> <!-- Optional -->
             <button id="scan-qr-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
                 Scan QR Code
             </button>
@@ -39,47 +40,50 @@
     <script src="script.js"></script>
     <script>
     document.getElementById('scan-qr-btn').addEventListener('click', () => {
-        const qrImage = document.getElementById('qr-code-image');
-        if (!qrImage) {
-            alert('QR code image not found.');
+        const leftSection = document.querySelector('.left-section');
+        if (!leftSection) {
+            alert('Left section not found on the page.');
             return;
         }
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
+        
+        canvas.width = leftSection.clientWidth;
+        canvas.height = leftSection.clientHeight;
 
-        const image = new Image();
-        image.crossOrigin = 'Anonymous';
-        image.src = qrImage.src;
-
-        image.onload = () => {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0, image.width, image.height);
-
+        html2canvas(leftSection, {
+            canvas: canvas,
+            useCORS: true,
+            scale: 1
+        }).then(() => {
             try {
-                const imageData = context.getImageData(0, 0, image.width, image.height);
-                const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
-                
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+
                 if (qrCode && qrCode.data) {
                     try {
                         new URL(qrCode.data);
+                        console.log('Found valid URL:', qrCode.data);
                         window.location.href = qrCode.data;
                     } catch (e) {
                         alert('QR code does not contain a valid URL.');
                     }
                 } else {
-                    alert('No QR code found in the image.');
+                    alert('No QR code found in the section.');
                 }
             } catch (e) {
                 alert('Error scanning QR code: ' + e.message);
             }
-        };
-
-        image.onerror = () => {
-            alert('Failed to load QR code image.');
-        };
+        }).catch(error => {
+            alert('Failed to capture section: ' + error.message);
+        });
     });
+
+    const script = document.createElement('script');
+    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+    script.onload = () => console.log('html2canvas loaded');
+    document.head.appendChild(script);
     </script>
 </body>
 </html>
