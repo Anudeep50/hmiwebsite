@@ -40,22 +40,18 @@
     <script src="script.js"></script>
     <script>
     document.getElementById('scan-qr-btn').addEventListener('click', () => {
-        const leftSection = document.querySelector('.left-section');
-        if (!leftSection) {
-            alert('Left section not found on the page.');
-            return;
-        }
-
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
-        
-        canvas.width = leftSection.clientWidth;
-        canvas.height = leftSection.clientHeight;
 
-        html2canvas(leftSection, {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        html2canvas(document.body, {
             canvas: canvas,
             useCORS: true,
-            scale: 1
+            scale: 1,
+            windowWidth: document.documentElement.scrollWidth,
+            windowHeight: document.documentElement.scrollHeight
         }).then(() => {
             try {
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -65,18 +61,18 @@
                     try {
                         new URL(qrCode.data);
                         console.log('Found valid URL:', qrCode.data);
-                        window.location.href = qrCode.data;
+                        window.open(qrCode.data, '_blank'); // Open in new tab
                     } catch (e) {
                         alert('QR code does not contain a valid URL.');
                     }
                 } else {
-                    alert('No QR code found in the section.');
+                    alert('No QR code found on the page.');
                 }
             } catch (e) {
                 alert('Error scanning QR code: ' + e.message);
             }
         }).catch(error => {
-            alert('Failed to capture section: ' + error.message);
+            alert('Failed to capture page: ' + error.message);
         });
     });
 
