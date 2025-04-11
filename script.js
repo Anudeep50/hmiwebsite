@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const optionButtons = document.querySelectorAll('.option-btn');
+    const parentButtons = document.querySelectorAll('.parent-btn');
+    const subButtons = document.querySelectorAll('.sub-btn');
+    const subOptionsDiv = document.getElementById('sub-options');
     const submitBtn = document.getElementById('submit-btn');
     const selectedOptionsSpan = document.getElementById('selected-options');
 
     let selectedParent = null;
     let selectedSub = null;
-    let selectedButton = null;
 
-    // Handle Option Selection (Mouse)
-    optionButtons.forEach(button => {
+    // Handle Parent Option Selection (Mouse)
+    parentButtons.forEach(button => {
         button.addEventListener('click', () => {
-            selectOption(button);
+            selectParent(button);
+        });
+    });
+
+    // Handle Sub-option Selection (Mouse)
+    subButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            selectSub(button);
         });
     });
 
@@ -23,45 +31,57 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (event) => {
         const key = event.key;
 
-        // Options (1-9)
-        if (['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
+        // Parent options (1, 2, 3) - only if no parent is selected yet
+        if (['1', '2', '3'].includes(key) && !selectedParent) {
             const index = parseInt(key) - 1;
-            if (optionButtons[index]) {
-                selectOption(optionButtons[index]);
+            if (parentButtons[index]) {
+                selectParent(parentButtons[index]);
                 event.preventDefault();
             }
         }
 
-        // Submit with Enter - only if an option is selected
+        // Sub-options (1, 2, 3) - only if parent is selected and no sub-option yet
+        else if (['1', '2', '3'].includes(key) && selectedParent && !selectedSub) {
+            const index = parseInt(key) - 1;
+            if (subButtons[index]) {
+                selectSub(subButtons[index]);
+                event.preventDefault();
+            }
+        }
+
+        // Submit with Enter - only if both parent and sub-option are selected
         if (key === 'Enter' && selectedParent && selectedSub) {
             submitSelection();
         }
     });
 
     // Helper Functions
-    function selectOption(button) {
-        // Clear previous selection
-        if (selectedButton) {
-            selectedButton.classList.remove('active');
-        }
-        
-        // Set new selection
+    function selectParent(button) {
+        parentButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        selectedButton = button;
-        selectedParent = button.getAttribute('data-parent');
-        selectedSub = button.getAttribute('data-sub');
-        
-        // Enable submit button
+        selectedParent = button.getAttribute('data-type');
+        subOptionsDiv.style.display = 'block';
+        selectedSub = null;
+        subButtons.forEach(btn => btn.classList.remove('active'));
+        submitBtn.classList.remove('enabled');
+        submitBtn.disabled = true;
+        updateSelection();
+    }
+
+    function selectSub(button) {
+        subButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedSub = button.getAttribute('data-subtype');
         submitBtn.classList.add('enabled');
         submitBtn.disabled = false;
-        
-        // Update selection display
         updateSelection();
     }
 
     function updateSelection() {
         if (selectedParent && selectedSub) {
             selectedOptionsSpan.textContent = `${selectedParent} - ${selectedSub}`;
+        } else if (selectedParent) {
+            selectedOptionsSpan.textContent = `${selectedParent}`;
         } else {
             selectedOptionsSpan.textContent = 'None';
         }
@@ -70,16 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function submitSelection() {
         if (selectedParent && selectedSub) {
             alert(`Submitted: ${selectedParent} - ${selectedSub}`);
-            
-            // Reset selections
-            if (selectedButton) {
-                selectedButton.classList.remove('active');
-            }
+            parentButtons.forEach(btn => btn.classList.remove('active'));
+            subButtons.forEach(btn => btn.classList.remove('active'));
+            subOptionsDiv.style.display = 'none';
             submitBtn.classList.remove('enabled');
             submitBtn.disabled = true;
             selectedParent = null;
             selectedSub = null;
-            selectedButton = null;
             updateSelection();
         }
     }
